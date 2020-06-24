@@ -1,0 +1,22 @@
+
+POST:   localhost:8762/register
+{
+    "username":"admin@gmail.com",
+    "password":"12345",
+    "email":"admin@gmail.com",
+    "firstName": "Jack",
+    "lastName": "Ryan",
+    "mobilePhone": "9191234567",
+    "isAdmin": true,
+    "isDeleted": false
+}
+
+POST:   localhost:8762/authenticate
+{
+    "username":"admin@gmail.com",
+    "password":"12345"
+}
+
+GET:    localhost:8762/product-api/product/1
+GET:    localhost:8762/order-api/order/3
+

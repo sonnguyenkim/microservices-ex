@@ -1,0 +1,55 @@
+
+
+
+
+- Ribbon
+    . With Eureka
+        - Add dependency
+        		<dependency>
+        			<groupId>com.netflix.ribbon</groupId>
+        			<artifactId>ribbon</artifactId>
+        		</dependency>
+        - In the application class, add two annotations @RibbonClient and @EnableDiscoveryClient
+            to enable ribbon and Eureka client for service registry.
+            @EnableDiscoveryClient
+            @SpringBootApplication
+            @RibbonClient(name = "server", configuration = RibbonConfiguration.class)
+            public class RibbonClientApplication {
+                ...
+            }
+            Note:
+            server.ribbon.listOfServers is disabled, we can enable this to manually add server to this load balancer.
+
+            server.ribbon.eureka.enabled=true
+            # Disable listOfServers because we use Eureka server
+            # server.ribbon.listOfServers=localhost:9090,localhost:9091,localhost:9092
+            server.ribbon.ServerListRefreshInterval=1000
+
+        - Implement RibbonConfiguration.java
+
+            public class RibbonConfiguration {
+                @Autowired
+                IClientConfig config;
+
+                @Bean
+                public IPing ribbonPing(IClientConfig config) {
+                    return new PingUrl();
+                }
+
+                @Bean
+                public IRule ribbonRule(IClientConfig config) {
+                    return new AvailabilityFilteringRule();
+                }
+            }
+
+        - Test:
+            Deploy multiple instances
+            java -jar -Dserver.port=XXXX target/YYYYY.jar
+
+            java -jar -Dserver.port=9901  target/product-service-0.0.1-SNAPSHOT.jar
+            java -jar -Dserver.port=9902  target/product-service-0.0.1-SNAPSHOT.jar
+
+
+
+
+
